@@ -1,4 +1,4 @@
-package com.assignment.atmcashwithdrawl.service;
+package com.citibank.atm.cashwithdrawl.service;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.assignment.atmcashwithdrawl.exceptions.IncorrectAmountException;
-import com.assignment.atmcashwithdrawl.exceptions.InsufficientBalanceException;
-import com.assignment.atmcashwithdrawl.pojos.Account;
+import com.citibank.atm.cashwithdrawl.exceptions.IncorrectAmountException;
+import com.citibank.atm.cashwithdrawl.exceptions.InsufficientBalanceException;
+import com.citibank.atm.cashwithdrawl.pojos.Account;
 
 
-
+/*
+ * This class is used to perform cashwithdrawl functionality from atm for multiple 
+ * customers simulateneously without interuppting each other's operation.
+ * This class is also responsible for throwing user defined exceptions InsufficeinetBalance and InvalidAmount.
+ * Both exceptions are being thrown from validate method.
+ */
 public class AccountOperations implements Runnable {
 
 	private Account account;
@@ -29,6 +34,10 @@ public class AccountOperations implements Runnable {
 		return errorMessage;
 	}
 
+	/*
+	 * This method is responsible for cash withdrawl
+	 * It internally calls for validatewithdrawl , dispenseAmount and printMessage
+	 */
 	public void cashwithdrawl() {
 		try {
 			validateWithdrawl();
@@ -46,6 +55,11 @@ public class AccountOperations implements Runnable {
 
 	}
 
+	/*
+	 * this method is to validate below 2 points
+	 * 1. amount entered by user is greater than 0 and should be in the multiples of 10
+	 * 2. withdrawl amount should be less than or equal to the amount in the account balance.
+	 */
 	private void validateWithdrawl() throws IncorrectAmountException, InsufficientBalanceException {
 		if (withdrawlAmount <= 0 || withdrawlAmount % 10 != 0) {
 			throw new IncorrectAmountException(
@@ -57,6 +71,10 @@ public class AccountOperations implements Runnable {
 		}
 	}
 
+	/*
+	 * This method will gurantee the minimum no of notes to be dispensed.
+	 * Also will execute if the validation is successful
+	 */
 	private void dispenseAmount() {
 		double tempAmount = withdrawlAmount;
 		dispensedNotes = new TreeMap<Integer, Integer>(Collections.reverseOrder());
@@ -71,6 +89,12 @@ public class AccountOperations implements Runnable {
 		}
 	}
 
+	/*
+	 * This will ensure to print the status of withdrawl.
+	 * In case of success along with success message will print remaining amount in balance and
+	 *  dispensed notes and their count along with no of notes
+	 * In case of failure will print the cause of unsuccessful withdrawl
+	 */
 	private void printMessage() {
 		synchronized (AccountOperations.class) {
 			if (null == errorMessage) {

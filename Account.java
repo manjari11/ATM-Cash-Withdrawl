@@ -1,4 +1,4 @@
-package com.assignment.atmcashwithdrawl.pojos;
+package com.citibank.atm.cashwithdrawl.pojos;
 
 public class Account {
 

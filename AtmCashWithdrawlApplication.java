@@ -1,13 +1,16 @@
-package com.assignment.atmcashwithdrawl;
+package com.citibank.atm.cashwithdrawl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.assignment.atmcashwithdrawl.pojos.Account;
-import com.assignment.atmcashwithdrawl.service.AccountOperations;
+import com.citibank.atm.cashwithdrawl.pojos.Account;
+import com.citibank.atm.cashwithdrawl.service.AccountOperations;
 
 
-
+/*
+ * Main class to test the functionality of AccountOperations class 
+ * Here i have created the threadpool and called cashwithdrawl through the threads.
+ */
 public class AtmCashWithdrawlApplication {
 
 	public static void main(String[] args) {
