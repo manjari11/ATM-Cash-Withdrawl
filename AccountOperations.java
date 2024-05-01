@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.citibank.atm.cashwithdrawl.exceptions.IncorrectAmountException;
+import com.citibank.atm.cashwithdrawl.exceptions.InvalidAmountException;
 import com.citibank.atm.cashwithdrawl.exceptions.InsufficientBalanceException;
 import com.citibank.atm.cashwithdrawl.pojos.Account;
 
@@ -47,7 +47,7 @@ public class AccountOperations implements Runnable {
 				account.setBalance(remainingAmount);
 				dispenseAmount();
 			}
-		} catch (IncorrectAmountException | InsufficientBalanceException e) {
+		} catch (InvalidAmountException | InsufficientBalanceException e) {
 			errorMessage = e.getMessage();
 		}
 		
@@ -60,9 +60,14 @@ public class AccountOperations implements Runnable {
 	 * 1. amount entered by user is greater than 0 and should be in the multiples of 10
 	 * 2. withdrawl amount should be less than or equal to the amount in the account balance.
 	 */
-	private void validateWithdrawl() throws IncorrectAmountException, InsufficientBalanceException {
-		if (withdrawlAmount <= 0 || withdrawlAmount % 10 != 0) {
-			throw new IncorrectAmountException(
+	private void validateWithdrawl() throws InvalidAmountException, InsufficientBalanceException {
+		if (withdrawlAmount <= 0) {
+			throw new InvalidAmountException(
+					"Invalid amount entered. \n Kindly enter amount greater than 0 and in multiples of 10");
+		}
+		
+		if (withdrawlAmount % 10 != 0) {
+			throw new InvalidAmountException(
 					"Invalid amount entered. \n Kindly enter valid amount in the multiples of 10");
 		}
 

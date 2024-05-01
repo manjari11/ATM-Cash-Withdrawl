@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.citibank.atm.cashwithdrawl.exceptions.IncorrectAmountException;
 import com.citibank.atm.cashwithdrawl.exceptions.InsufficientBalanceException;
+import com.citibank.atm.cashwithdrawl.exceptions.InvalidAmountException;
 import com.citibank.atm.cashwithdrawl.pojos.Account;
 import com.citibank.atm.cashwithdrawl.service.AccountOperations;
 
@@ -24,9 +24,8 @@ public class AccountOperationsTest {
 	 * in account
 	 */
 	@Test
-	public void testCashWithdrawlWhenWithdrawlSuccessful()
-			throws IncorrectAmountException, InsufficientBalanceException {
-		Account account = new Account("Test", 67567, 10000);
+	public void testCashWithdrawlWhenWithdrawlSuccessful() throws InvalidAmountException, InsufficientBalanceException {
+		Account account = new Account("Test Case1", 67567, 10000);
 		AccountOperations withdrawlOperation = new AccountOperations(account, 4530);
 		withdrawlOperation.cashwithdrawl();
 		assertNull(withdrawlOperation.getErrorMessage());
@@ -38,9 +37,8 @@ public class AccountOperationsTest {
 	 * that the current balance in the account
 	 */
 	@Test
-	public void testCashWithdrawlWhenInsufficientBalance()
-			throws IncorrectAmountException, InsufficientBalanceException {
-		Account account = new Account("Test", 6767, 1000);
+	public void testCashWithdrawlWhenInsufficientBalance() throws InvalidAmountException, InsufficientBalanceException {
+		Account account = new Account("Test Case2", 6767, 1000);
 		AccountOperations withdrawlOperation = new AccountOperations(account, 4530);
 		withdrawlOperation.cashwithdrawl();
 		assertNotNull(withdrawlOperation.getErrorMessage());
@@ -49,14 +47,41 @@ public class AccountOperationsTest {
 	}
 
 	/*
-	 * To test negative scenario when user entering withdrawl amount is either not in multiples
-	 * of 10 or is less than equal to 0
+	 * To test negative scenario when user entering withdrawl amount is not in
+	 * multiples
 	 */
 	@Test
 	public void testCashWithdrawlWhenInvalidAmountEntered()
-			throws IncorrectAmountException, InsufficientBalanceException {
-		Account account = new Account("Test", 6767, 100000);
+			throws InvalidAmountException, InsufficientBalanceException {
+		Account account = new Account("Test Case3", 6767, 100000);
 		AccountOperations withdrawlOperation = new AccountOperations(account, 3456);
+		withdrawlOperation.cashwithdrawl();
+		assertNotNull(withdrawlOperation.getErrorMessage());
+		assertFalse(withdrawlOperation.getErrorMessage().contains("Insufficient balance in account"));
+		assertTrue(withdrawlOperation.getErrorMessage().contains("Invalid amount entered"));
+	}
+
+	/*
+	 * To test negative scenario when user entering withdrawl amount is 0
+	 */
+	@Test
+	public void testCashWithdrawlWhenAmountEnteredAsZero() throws InvalidAmountException, InsufficientBalanceException {
+		Account account = new Account("Test Case4", 6767, 100000);
+		AccountOperations withdrawlOperation = new AccountOperations(account, 0);
+		withdrawlOperation.cashwithdrawl();
+		assertNotNull(withdrawlOperation.getErrorMessage());
+		assertFalse(withdrawlOperation.getErrorMessage().contains("Insufficient balance in account"));
+		assertTrue(withdrawlOperation.getErrorMessage().contains("Invalid amount entered"));
+	}
+
+	/*
+	 * To test negative scenario when user entering withdrawl amount is negative
+	 */
+	@Test
+	public void testCashWithdrawlWhenAmountEnteredIsNegative()
+			throws InvalidAmountException, InsufficientBalanceException {
+		Account account = new Account("Test Case5", 6767, 100000);
+		AccountOperations withdrawlOperation = new AccountOperations(account, -1234);
 		withdrawlOperation.cashwithdrawl();
 		assertNotNull(withdrawlOperation.getErrorMessage());
 		assertFalse(withdrawlOperation.getErrorMessage().contains("Insufficient balance in account"));
