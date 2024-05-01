@@ -1,4 +1,4 @@
-package com.assignment.atmcashwithdrawl.exceptions;
+package com.citibank.atm.cashwithdrawl.exceptions;
 
 public class InsufficientBalanceException extends Exception{
 	
